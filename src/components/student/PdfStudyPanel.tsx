@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import { FileText, Pause, Play, Square } from "lucide-react";
 
-const pdfText = `Resumo de Direito Penal. A teoria do crime estuda os elementos que tornam uma conduta criminosa.
-O crime pode ser analisado como fato típico, ilícito e culpável. O fato típico envolve conduta, resultado, nexo causal e tipicidade.`;
+<p className="mt-1 text-sm text-slate-500">
+  Texto demonstrativo • áudio parcial
+</p>;
 
 export function PdfStudyPanel() {
   const [rate, setRate] = useState(1.1);
