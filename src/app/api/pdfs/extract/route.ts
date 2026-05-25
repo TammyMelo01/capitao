@@ -17,8 +17,8 @@ export async function POST(request: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const pdfParseModule = await import("pdf-parse");
-    const pdfParse = pdfParseModule.default;
+    // @ts-ignore
+    const pdfParse = require("pdf-parse");
 
     const parsed = await pdfParse(buffer);
 
