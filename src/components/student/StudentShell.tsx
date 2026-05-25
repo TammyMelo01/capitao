@@ -7,7 +7,8 @@ import {
   FileText,
   Home,
   ListChecks,
-  ShieldCheck
+  ShieldCheck,
+  Users
 } from "lucide-react";
 
 type NavItem = {
@@ -18,6 +19,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { href: "/aluno", label: "Painel", icon: Home },
+  { href: "/aluno/perfis", label: "Perfis", icon: Users },
   { href: "/aluno/estudar", label: "Estudar", icon: BookOpen },
   { href: "/aluno/cronograma", label: "Cronograma", icon: CalendarDays },
   { href: "/aluno/questoes", label: "Questões", icon: ListChecks },
@@ -66,7 +68,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">
-          {navItems.slice(0, 5).map((item) => (
+          {navItems.slice(0, 6).map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -84,3 +86,4 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
