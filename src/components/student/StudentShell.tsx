@@ -1,6 +1,14 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { BarChart3, BookOpen, FileText, Home, ListChecks, ShieldCheck } from "lucide-react";
+import {
+  BarChart3,
+  BookOpen,
+  CalendarDays,
+  FileText,
+  Home,
+  ListChecks,
+  ShieldCheck
+} from "lucide-react";
 
 type NavItem = {
   href: Route;
@@ -11,6 +19,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { href: "/aluno", label: "Painel", icon: Home },
   { href: "/aluno/estudar", label: "Estudar", icon: BookOpen },
+  { href: "/aluno/cronograma", label: "Cronograma", icon: CalendarDays },
   { href: "/aluno/questoes", label: "Questões", icon: ListChecks },
   { href: "/aluno/biblioteca", label: "Biblioteca", icon: FileText },
   { href: "/", label: "Dashboard geral", icon: BarChart3 }
@@ -57,7 +66,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">
-          {navItems.slice(0, 4).map((item) => (
+          {navItems.slice(0, 5).map((item) => (
             <Link
               key={item.href}
               href={item.href}
