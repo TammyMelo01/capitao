@@ -1,33 +1,120 @@
 "use client";
 
-import { useState } from "react";
-import { CheckCircle2, PlayCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckCircle2, Loader2, PlayCircle } from "lucide-react";
 
-const lessons = [
-  { id: "1", title: "Teoria do Crime — aula completa", youtubeId: "dQw4w9WgXcQ", duration: "2h 14min" },
-  { id: "2", title: "Teoria do Crime — revisão Cebraspe", youtubeId: "dQw4w9WgXcQ", duration: "58min" },
-  { id: "3", title: "Questões comentadas", youtubeId: "dQw4w9WgXcQ", duration: "1h 06min" }
-];
+type Lesson = {
+  youtubeId: string;
+  title: string;
+  channel?: string;
+  duration?: string;
+  url?: string;
+};
+
+const currentTopic = {
+  subject: "Direito Penal",
+  topic: "Teoria do Crime",
+  concurso: "concurso policial",
+  banca: "Cebraspe"
+};
 
 export function VideoLessonPlayer() {
-  const [activeLesson, setActiveLesson] = useState(lessons[0]);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadVideos() {
+      setLoading(true);
+
+      const response = await fetch("/api/videos/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(currentTopic)
+      });
+
+      const data = await response.json();
+
+      const videos = data.videos ?? [];
+
+      setLessons(videos);
+      setActiveLesson(videos[0] ?? null);
+      setLoading(false);
+    }
+
+    loadVideos();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex items-center gap-3 text-slate-600">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Buscando videoaulas gratuitas para o tema...
+        </div>
+      </section>
+    );
+  }
+
+  if (!activeLesson) {
+    return (
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="font-bold text-red-700">Nenhum vídeo encontrado.</p>
+        <p className="mt-2 text-sm text-slate-600">
+          Verifique se a variável YOUTUBE_API_KEY está cadastrada no Vercel.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4">
-        <p className="text-sm font-semibold text-blue-700">Videoaula</p>
+        <p className="text-sm font-semibold text-blue-700">Videoaula encontrada pela IA</p>
         <h2 className="text-xl font-black">{activeLesson.title}</h2>
-        <p className="mt-1 text-sm text-slate-500">{activeLesson.duration}</p>
+        <p className="mt-1 text-sm text-slate-500">
+          {activeLesson.channel ?? "YouTube"}
+        </p>
       </div>
+
       <div className="overflow-hidden rounded-2xl bg-slate-950">
-        <iframe className="aspect-video w-full" src={`https://www.youtube.com/embed/${activeLesson.youtubeId}`} title={activeLesson.title} allowFullScreen />
+        <iframe
+          className="aspect-video w-full"
+          src={`https://www.youtube.com/embed/${activeLesson.youtubeId}`}
+          title={activeLesson.title}
+          allowFullScreen
+        />
       </div>
+
       <div className="mt-5 space-y-3">
-        <h3 className="font-bold">Playlist da sessão</h3>
+        <h3 className="font-bold">Vídeos encontrados para este tema</h3>
+
         {lessons.map((lesson) => (
-          <button key={lesson.id} onClick={() => setActiveLesson(lesson)} className={`flex w-full items-center gap-3 rounded-2xl p-4 text-left ${activeLesson.id === lesson.id ? "bg-blue-50 ring-2 ring-blue-200" : "bg-slate-50 hover:bg-slate-100"}`}>
-            <span className="rounded-xl bg-white p-2 text-blue-700 shadow-sm">{activeLesson.id === lesson.id ? <PlayCircle className="h-5 w-5" /> : <CheckCircle2 className="h-5 w-5" />}</span>
-            <span className="flex-1"><strong className="block">{lesson.title}</strong><span className="text-sm text-slate-500">{lesson.duration}</span></span>
+          <button
+            key={lesson.youtubeId}
+            onClick={() => setActiveLesson(lesson)}
+            className={`flex w-full items-center gap-3 rounded-2xl p-4 text-left ${
+              activeLesson.youtubeId === lesson.youtubeId
+                ? "bg-blue-50 ring-2 ring-blue-200"
+                : "bg-slate-50 hover:bg-slate-100"
+            }`}
+          >
+            <span className="rounded-xl bg-white p-2 text-blue-700 shadow-sm">
+              {activeLesson.youtubeId === lesson.youtubeId ? (
+                <PlayCircle className="h-5 w-5" />
+              ) : (
+                <CheckCircle2 className="h-5 w-5" />
+              )}
+            </span>
+
+            <span className="flex-1">
+              <strong className="block">{lesson.title}</strong>
+              <span className="text-sm text-slate-500">
+                {lesson.channel ?? "YouTube"}
+              </span>
+            </span>
           </button>
         ))}
       </div>
