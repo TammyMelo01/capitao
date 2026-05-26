@@ -1,46 +1,76 @@
 import { FileText, PlayCircle } from "lucide-react";
+import { getProfileBySlug } from "@/lib/profiles";
 
-const videos = [
-  ["Direito Penal — Teoria do Crime", "Aula completa", "2h 14min"],
-  ["Processo Penal — Inquérito Policial", "Questões comentadas", "1h 02min"],
-  ["Informática — Segurança da Informação", "Revisão completa", "58min"]
-];
+type PageProps = {
+  searchParams?: Promise<{
+    profile?: string;
+  }>;
+};
 
-const pdfs = [
-  ["Resumo de Direito Penal", "42 páginas", "Áudio disponível"],
-  ["Legislação Penal Especial", "88 páginas", "Gerar áudio"],
-  ["Português para Cebraspe", "61 páginas", "Resumo pronto"]
-];
+export default async function BibliotecaPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const profile = getProfileBySlug(params?.profile);
 
-export default function BibliotecaPage() {
   return (
     <main className="space-y-6">
-      <section>
-        <p className="text-sm font-semibold text-blue-700">Biblioteca</p>
-        <h1 className="text-3xl font-black tracking-tight">Vídeos e PDFs</h1>
-        <p className="mt-2 text-slate-600">Conteúdos gratuitos organizados por edital, matéria e tópico.</p>
+      <section className="rounded-3xl bg-slate-950 p-6 text-white">
+        <p className="text-sm font-semibold text-blue-300">
+          Biblioteca — {profile.name}
+        </p>
+
+        <h1 className="mt-2 text-3xl font-black tracking-tight">
+          {profile.title}
+        </h1>
+
+        <p className="mt-2 max-w-2xl text-slate-300">
+          {profile.description}. Conteúdos organizados por edital, matéria e tópico.
+        </p>
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex items-center gap-2"><PlayCircle className="h-5 w-5 text-blue-700" /><h2 className="text-lg font-bold">Videoaulas</h2></div>
+          <div className="mb-4 flex items-center gap-2">
+            <PlayCircle className="h-5 w-5 text-blue-700" />
+            <h2 className="text-lg font-bold">Videoaulas</h2>
+          </div>
+
           <div className="space-y-3">
-            {videos.map(([title, type, duration]) => (
-              <article key={title} className="rounded-2xl bg-slate-50 p-4">
-                <strong>{title}</strong>
-                <div className="mt-2 flex justify-between text-sm text-slate-600"><span>{type}</span><span>{duration}</span></div>
+            {profile.videos.map((video) => (
+              <article key={video.title} className="rounded-2xl bg-slate-50 p-4">
+                <strong>{video.title}</strong>
+
+                <p className="mt-1 text-sm text-slate-600">
+                  {video.description}
+                </p>
+
+                <div className="mt-2 flex justify-between text-sm text-slate-600">
+                  <span>{profile.name}</span>
+                  <span>{video.duration}</span>
+                </div>
               </article>
             ))}
           </div>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex items-center gap-2"><FileText className="h-5 w-5 text-blue-700" /><h2 className="text-lg font-bold">PDFs</h2></div>
+          <div className="mb-4 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-blue-700" />
+            <h2 className="text-lg font-bold">PDFs</h2>
+          </div>
+
           <div className="space-y-3">
-            {pdfs.map(([title, pages, status]) => (
-              <article key={title} className="rounded-2xl bg-slate-50 p-4">
-                <strong>{title}</strong>
-                <div className="mt-2 flex justify-between text-sm text-slate-600"><span>{pages}</span><span>{status}</span></div>
+            {profile.pdfs.map((pdf) => (
+              <article key={pdf.title} className="rounded-2xl bg-slate-50 p-4">
+                <strong>{pdf.title}</strong>
+
+                <p className="mt-1 text-sm text-slate-600">
+                  {pdf.description}
+                </p>
+
+                <div className="mt-2 flex justify-between text-sm text-slate-600">
+                  <span>{pdf.pages}</span>
+                  <span>Áudio disponível</span>
+                </div>
               </article>
             ))}
           </div>
@@ -49,3 +79,4 @@ export default function BibliotecaPage() {
     </main>
   );
 }
+
