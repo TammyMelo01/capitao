@@ -45,15 +45,38 @@ export default async function AlunoHomePage({ searchParams }: PageProps) {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StudentStatCard title="Aulas assistidas" value="0" description="Nenhuma aula concluída" icon={<PlayCircle className="h-5 w-5" />} />
-        <StudentStatCard title="Questões feitas" value="0" description="Nenhuma questão respondida" icon={<CheckCircle2 className="h-5 w-5" />} />
-        <StudentStatCard title="Horas estudadas" value="0h" description="Comece seu ciclo de estudos" icon={<Clock className="h-5 w-5" />} />
-        <StudentStatCard title="Score aprovação" value="0%" description="Dados insuficientes" icon={<Target className="h-5 w-5" />} />
+        <StudentStatCard
+          title="Aulas assistidas"
+          value="0"
+          description="Nenhuma aula concluída"
+          icon={<PlayCircle className="h-5 w-5" />}
+        />
+
+        <StudentStatCard
+          title="Questões feitas"
+          value="0"
+          description="Nenhuma questão respondida"
+          icon={<CheckCircle2 className="h-5 w-5" />}
+        />
+
+        <StudentStatCard
+          title="Horas estudadas"
+          value="0h"
+          description="Comece seu ciclo de estudos"
+          icon={<Clock className="h-5 w-5" />}
+        />
+
+        <StudentStatCard
+          title="Score aprovação"
+          value="0%"
+          description="Dados insuficientes"
+          icon={<Target className="h-5 w-5" />}
+        />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <ContinueStudyingCard />
-        <TodayStudyPlan />
+        <ContinueStudyingCard profile={profile} topic={today} />
+        <TodayStudyPlan profile={profile} topic={today} />
       </section>
 
       <StudyProgressPanel />
