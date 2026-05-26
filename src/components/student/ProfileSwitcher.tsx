@@ -1,15 +1,16 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function ProfileSwitcher() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const active = searchParams.get("profile") === "camila" ? "camila" : "tammy";
 
   function changeProfile(profile: "tammy" | "camila") {
     localStorage.setItem("capitao:activeProfile", profile);
-    router.push(`/aluno?profile=${profile}`);
+    router.push(`${pathname}?profile=${profile}`);
   }
 
   return (
