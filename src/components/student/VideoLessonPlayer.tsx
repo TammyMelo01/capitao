@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle2, Loader2, PlayCircle } from "lucide-react";
+import type { StudyTopic } from "@/lib/profiles";
 
 type Lesson = {
   youtubeId: string;
@@ -11,14 +12,11 @@ type Lesson = {
   url?: string;
 };
 
-const currentTopic = {
-  subject: "Direito Penal",
-  topic: "Teoria do Crime",
-  concurso: "concurso policial",
-  banca: "Cebraspe"
+type Props = {
+  topic: StudyTopic;
 };
 
-export function VideoLessonPlayer() {
+export function VideoLessonPlayer({ topic }: Props) {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,11 +30,10 @@ export function VideoLessonPlayer() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(currentTopic)
+        body: JSON.stringify(topic)
       });
 
       const data = await response.json();
-
       const videos = data.videos ?? [];
 
       setLessons(videos);
@@ -45,14 +42,14 @@ export function VideoLessonPlayer() {
     }
 
     loadVideos();
-  }, []);
+  }, [topic.subject, topic.topic, topic.concurso, topic.banca]);
 
   if (loading) {
     return (
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-center gap-3 text-slate-600">
           <Loader2 className="h-5 w-5 animate-spin" />
-          Buscando videoaulas gratuitas para o tema...
+          Buscando videoaulas para {topic.subject} — {topic.topic}...
         </div>
       </section>
     );
@@ -63,7 +60,7 @@ export function VideoLessonPlayer() {
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <p className="font-bold text-red-700">Nenhum vídeo encontrado.</p>
         <p className="mt-2 text-sm text-slate-600">
-          Verifique se a variável YOUTUBE_API_KEY está cadastrada no Vercel.
+          Verifique a variável YOUTUBE_API_KEY no Vercel.
         </p>
       </section>
     );
@@ -72,8 +69,12 @@ export function VideoLessonPlayer() {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4">
-        <p className="text-sm font-semibold text-blue-700">Videoaula encontrada pela IA</p>
+        <p className="text-sm font-semibold text-blue-700">
+          Videoaula encontrada automaticamente
+        </p>
+
         <h2 className="text-xl font-black">{activeLesson.title}</h2>
+
         <p className="mt-1 text-sm text-slate-500">
           {activeLesson.channel ?? "YouTube"}
         </p>
@@ -89,7 +90,9 @@ export function VideoLessonPlayer() {
       </div>
 
       <div className="mt-5 space-y-3">
-        <h3 className="font-bold">Vídeos encontrados para este tema</h3>
+        <h3 className="font-bold">
+          Vídeos encontrados para {topic.subject}
+        </h3>
 
         {lessons.map((lesson) => (
           <button
