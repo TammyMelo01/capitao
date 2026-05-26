@@ -2,64 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { CheckCircle2, Lock, XCircle } from "lucide-react";
+import type { QuestionItem, StudentProfile } from "@/lib/profiles";
 
-type Question = {
-  id: string;
-  statement: string;
-  answer: "Certo" | "Errado";
-  explanation: string;
-  reinforcement: {
-    correct: string;
-    wrong: string;
-  };
+type Props = {
+  profile: StudentProfile;
 };
 
-const questions: Question[] = [
-  {
-    id: "q1",
-    statement:
-      "No conceito analítico de crime, fato típico, ilicitude e culpabilidade são elementos analisados de forma estruturada.",
-    answer: "Certo",
-    explanation:
-      "O conceito analítico normalmente divide o crime em fato típico, ilicitude e culpabilidade.",
-    reinforcement: {
-      correct:
-        "Muito bem. Você identificou corretamente a estrutura clássica do conceito analítico de crime.",
-      wrong:
-        "Atenção: essa afirmação está correta. Revise a estrutura do crime: fato típico, ilicitude e culpabilidade."
-    }
-  },
-  {
-    id: "q2",
-    statement:
-      "A legítima defesa é causa de exclusão da culpabilidade, pois elimina a capacidade de entender o caráter ilícito do fato.",
-    answer: "Errado",
-    explanation:
-      "A legítima defesa é causa de exclusão da ilicitude, não da culpabilidade.",
-    reinforcement: {
-      correct:
-        "Correto. O ponto-chave é lembrar que legítima defesa exclui a ilicitude.",
-      wrong:
-        "Cuidado: legítima defesa não exclui culpabilidade. Ela exclui a ilicitude da conduta."
-    }
-  },
-  {
-    id: "q3",
-    statement:
-      "O nexo causal é um dos elementos analisados dentro do fato típico, quando o crime exige resultado naturalístico.",
-    answer: "Certo",
-    explanation:
-      "Nos crimes materiais, o nexo causal liga a conduta praticada ao resultado produzido.",
-    reinforcement: {
-      correct:
-        "Boa. Você associou corretamente nexo causal aos crimes que exigem resultado naturalístico.",
-      wrong:
-        "Revise crimes materiais: neles, o nexo causal é necessário para ligar conduta e resultado."
-    }
-  }
-];
-
-export function QuestionPractice() {
+export function QuestionPractice({ profile }: Props) {
+  const questions = profile.questions;
   const [answers, setAnswers] = useState<Record<string, "Certo" | "Errado">>({});
 
   const result = useMemo(() => {
@@ -77,7 +27,7 @@ export function QuestionPractice() {
         ? Math.round((correct.length / answered.length) * 100)
         : 0
     };
-  }, [answers]);
+  }, [answers, questions]);
 
   function answerQuestion(questionId: string, option: "Certo" | "Errado") {
     setAnswers((current) => {
@@ -94,19 +44,12 @@ export function QuestionPractice() {
     return (
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-5">
-          <p className="text-sm font-semibold text-blue-700">Questões geradas</p>
-          <h2 className="text-xl font-black">Treino estilo Cebraspe</h2>
+          <p className="text-sm font-semibold text-blue-700">
+            Questões geradas — {profile.name}
+          </p>
+          <h2 className="text-xl font-black">Treino</h2>
           <p className="mt-1 text-sm text-slate-500">
             Nenhuma questão disponível ainda.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-          <p className="text-lg font-bold text-slate-700">
-            Nenhuma questão carregada
-          </p>
-          <p className="mt-2 text-sm text-slate-500">
-            As questões serão geradas automaticamente pela IA conforme o plano de estudos.
           </p>
         </div>
       </section>
@@ -118,11 +61,11 @@ export function QuestionPractice() {
       <div className="mb-5 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <p className="text-sm font-semibold text-blue-700">
-            Questões geradas
+            Questões geradas — {profile.name}
           </p>
 
           <h2 className="text-xl font-black">
-            Treino estilo Cebraspe
+            Treino de {profile.title}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
@@ -162,7 +105,7 @@ export function QuestionPractice() {
       </div>
 
       <div className="space-y-4">
-        {questions.map((question, index) => {
+        {questions.map((question: QuestionItem, index) => {
           const selected = answers[question.id];
           const isAnswered = Boolean(selected);
           const isCorrect = selected === question.answer;
