@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import type { Route } from "next";
+import { useSearchParams } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
@@ -12,7 +14,7 @@ import {
 } from "lucide-react";
 
 type NavItem = {
-  href: Route;
+  href: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
 };
@@ -28,13 +30,24 @@ const navItems: NavItem[] = [
 ];
 
 export function StudentShell({ children }: { children: React.ReactNode }) {
+  const searchParams = useSearchParams();
+  const activeProfile = searchParams.get("profile") === "camila" ? "camila" : "tammy";
+
+  function withProfile(href: string) {
+    if (href === "/") return href;
+    if (href === "/aluno/perfis") return href;
+
+    return `${href}?profile=${activeProfile}`;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-slate-200 bg-white p-5 lg:block">
-        <Link href="/aluno" className="mb-8 flex items-center gap-3">
+        <Link href={`/aluno?profile=${activeProfile}`} className="mb-8 flex items-center gap-3">
           <div className="rounded-2xl bg-blue-700 p-3 text-white">
             <ShieldCheck className="h-6 w-6" />
           </div>
+
           <div>
             <strong className="block text-lg">Capitão</strong>
             <span className="text-sm text-slate-500">Área do aluno</span>
@@ -48,7 +61,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={withProfile(item.href)}
                 className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
               >
                 <Icon className="h-5 w-5" />
@@ -61,9 +74,10 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
 
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
         <div className="flex items-center justify-between">
-          <Link href="/aluno" className="font-black">
+          <Link href={`/aluno?profile=${activeProfile}`} className="font-black">
             Capitão
           </Link>
+
           <span className="text-sm text-slate-500">Área do aluno</span>
         </div>
 
@@ -71,7 +85,7 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
           {navItems.slice(0, 6).map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={withProfile(item.href)}
               className="whitespace-nowrap rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700"
             >
               {item.label}
@@ -86,4 +100,5 @@ export function StudentShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
 
