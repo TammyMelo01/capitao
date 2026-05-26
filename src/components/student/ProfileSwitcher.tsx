@@ -10,7 +10,7 @@ export function ProfileSwitcher() {
 
   function changeProfile(profile: "tammy" | "camila") {
     localStorage.setItem("capitao:activeProfile", profile);
-    router.push(`${pathname}?profile=${profile}`);
+    router.push((`${pathname}?profile=${profile}`) as any);
   }
 
   return (
