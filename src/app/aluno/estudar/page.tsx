@@ -33,7 +33,7 @@ export default async function EstudarPage({ searchParams }: PageProps) {
         <PdfRealStudyPanel />
       </section>
 
-      <QuestionPractice />
+      <QuestionPractice profile={profile} />
     </main>
   );
 }
