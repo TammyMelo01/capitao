@@ -1,5 +1,6 @@
 import { QuestionPractice } from "@/components/student/QuestionPractice";
 import { getProfileBySlug } from "@/lib/profiles";
+import { getTodayTopic } from "@/lib/study-progress";
 
 type PageProps = {
   searchParams?: Promise<{
@@ -10,24 +11,33 @@ type PageProps = {
 export default async function QuestoesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const profile = getProfileBySlug(params?.profile);
+  const today = getTodayTopic(profile);
+
+  const topic = {
+    subject: today.subject,
+    topic: today.topic,
+    concurso: profile.defaultTopic.concurso,
+    banca: profile.defaultTopic.banca
+  };
 
   return (
     <main className="space-y-6">
       <section className="rounded-3xl bg-slate-950 p-6 text-white">
         <p className="text-sm font-semibold text-blue-300">
-          Questões — {profile.name}
+          Questões do dia {today.day} — {profile.name}
         </p>
 
         <h1 className="mt-2 text-3xl font-black tracking-tight">
-          {profile.title}
+          {topic.subject} — {topic.topic}
         </h1>
 
         <p className="mt-2 max-w-2xl text-slate-300">
-          {profile.description}. Resolva questões e receba feedback imediato.
+          Todo dia o Capitão gera 100 questões diferentes com base no conteúdo
+          do cronograma.
         </p>
       </section>
 
-      <QuestionPractice profile={profile} />
+      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={100} />
     </main>
   );
 }
