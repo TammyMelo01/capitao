@@ -34,7 +34,12 @@ export default async function EstudarPage({ searchParams }: PageProps) {
         <PdfRealStudyPanel />
       </section>
 
-      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={100} />
+      <QuestionPractice
+        profile={profile}
+        topic={topic}
+        day={today.day}
+        quantity={20}
+      />
     </main>
   );
 }
