@@ -37,7 +37,7 @@ export default async function QuestoesPage({ searchParams }: PageProps) {
         </p>
       </section>
 
-      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={100} />
+      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={20} />
     </main>
   );
 }
