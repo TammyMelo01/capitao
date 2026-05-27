@@ -4,6 +4,7 @@ import { StudyMemoryBanner } from "@/components/student/StudyMemoryBanner";
 import { StudySessionHeader } from "@/components/student/StudySessionHeader";
 import { VideoLessonPlayer } from "@/components/student/VideoLessonPlayer";
 import { getProfileBySlug } from "@/lib/profiles";
+import { getTodayTopic } from "@/lib/study-progress";
 
 type PageProps = {
   searchParams?: Promise<{
@@ -14,7 +15,7 @@ type PageProps = {
 export default async function EstudarPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const profile = getProfileBySlug(params?.profile);
-  const today = profile.monthlyPlan[0];
+  const today = getTodayTopic(profile);
 
   const topic = {
     subject: today.subject,
@@ -29,11 +30,11 @@ export default async function EstudarPage({ searchParams }: PageProps) {
       <StudyMemoryBanner />
 
       <section className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
-        <VideoLessonPlayer topic={topic} />
+        <VideoLessonPlayer profile={profile} topic={topic} dayTopic={today} />
         <PdfRealStudyPanel />
       </section>
 
-      <QuestionPractice profile={profile} />
+      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={100} />
     </main>
   );
 }
