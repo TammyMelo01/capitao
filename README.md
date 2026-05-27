@@ -53,6 +53,4 @@ GROQ_API_KEY=
 YOUTUBE_API_KEY=
 ```
 
-## Observação
 
-Este projeto é um starter funcional. Algumas telas usam dados simulados até o Supabase estar configurado.
