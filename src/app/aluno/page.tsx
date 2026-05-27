@@ -5,6 +5,7 @@ import { StudentStatCard } from "@/components/student/StudentStatCard";
 import { StudyProgressPanel } from "@/components/student/StudyProgressPanel";
 import { TodayStudyPlan } from "@/components/student/TodayStudyPlan";
 import { getProfileBySlug } from "@/lib/profiles";
+import { getTodayTopic } from "@/lib/study-progress";
 
 type PageProps = {
   searchParams?: Promise<{
@@ -15,7 +16,7 @@ type PageProps = {
 export default async function AlunoHomePage({ searchParams }: PageProps) {
   const params = await searchParams;
   const profile = getProfileBySlug(params?.profile);
-  const today = profile.monthlyPlan[0];
+  const today = getTodayTopic(profile);
 
   return (
     <main className="space-y-6">
@@ -37,7 +38,7 @@ export default async function AlunoHomePage({ searchParams }: PageProps) {
         </p>
 
         <div className="mt-5 rounded-2xl bg-white/10 p-4">
-          <p className="text-sm text-slate-300">Tema inicial do ciclo</p>
+          <p className="text-sm text-slate-300">Tema do dia {today.day}</p>
           <strong className="block text-lg">
             {today.subject} — {today.topic}
           </strong>
@@ -83,4 +84,5 @@ export default async function AlunoHomePage({ searchParams }: PageProps) {
     </main>
   );
 }
+
 
