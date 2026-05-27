@@ -32,12 +32,18 @@ export default async function QuestoesPage({ searchParams }: PageProps) {
         </h1>
 
         <p className="mt-2 max-w-2xl text-slate-300">
-          Todo dia o Capitão gera 100 questões diferentes com base no conteúdo
-          do cronograma.
+          Durante os testes, o Capitão gera 20 questões diferentes com base no
+          conteúdo do cronograma. Depois podemos voltar para 100.
         </p>
       </section>
 
-      <QuestionPractice profile={profile} topic={topic} day={today.day} quantity={20} />
+      <QuestionPractice
+        profile={profile}
+        topic={topic}
+        day={today.day}
+        quantity={20}
+      />
     </main>
   );
 }
+
